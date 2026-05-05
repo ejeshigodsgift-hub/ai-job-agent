@@ -34,8 +34,10 @@ def run_bot():
                 bot.send_message(chat_id=uid, text=handle(uid, text))
         time.sleep(2)
 
-#@app.route("/")
-def home():
+@app.route("/")
+def home_status():
+    return "AI Job Agent Running"
+#def home():
     return "AI Job Agent Running"
 
 if __name__ == "__main__":
