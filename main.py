@@ -3,10 +3,13 @@ import telegram
 from flask import Flask
 from bot import handle
 from jobs import background_search
-print("TOKEN:", TOKEN)
 
-bot = telegram.Bot(token=os.getenv("TELEGRAM_TOKEN"))
-app = Flask(__name__)
+
+TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")   # 1. create TOKEN
+
+print("TOKEN:", TOKEN)                    # 2. print it here
+
+bot = telegram.Bot(token=TOKEN)           # 3. use it
 
 def run_bot():
     offset = None
