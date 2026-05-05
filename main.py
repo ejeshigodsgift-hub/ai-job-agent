@@ -4,27 +4,34 @@ from flask import Flask
 from bot import handle
 from jobs import background_search
 
+# 1. Create Flask FIRST
+app = Flask(__name__)
 
-TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")   # 1. create TOKEN
+# 2. Load token
+TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 
-print("TOKEN:", TOKEN)                    # 2. print it here
+# 3. (Optional debug)
+print("TOKEN:", TOKEN)
 
-bot = telegram.Bot(token=TOKEN)           # 3. use it
+# 4. Create bot
+bot = telegram.Bot(token=TOKEN)
 
+# 5. Now routes can safely use app
+@app.route("/")
+def home():
+    return "Bot is running"
+
+# 6. Bot loop
 def run_bot():
     offset = None
     while True:
         updates = bot.get_updates(offset=offset)
-
         for u in updates:
             offset = u.update_id + 1
-
             if u.message:
                 uid = u.message.from_user.id
                 text = u.message.text or ""
-
                 bot.send_message(chat_id=uid, text=handle(uid, text))
-
         time.sleep(2)
 
 @app.route("/")
