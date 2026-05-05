@@ -11,7 +11,7 @@ app = Flask(__name__)
 TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 
 # 3. (Optional debug)
-print("TOKEN:", TOKEN)
+
 
 # 4. Create bot
 bot = telegram.Bot(token=TOKEN)
