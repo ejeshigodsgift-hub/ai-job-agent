@@ -2,6 +2,7 @@ import requests, datetime, os, time
 from bs4 import BeautifulSoup
 from ai import score_job, enrich_job
 from storage import load, save, reset_daily
+import traceback
 
 # ===== API (Adzuna) =====
 def search_adzuna(keyword):
