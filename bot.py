@@ -1,6 +1,5 @@
 from storage import load, save
 from ai import update_profile, chat_with_memory
-import traceback
 
 def handle(uid, text):
     data = load(uid)
