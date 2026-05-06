@@ -1,8 +1,11 @@
 from storage import load, save
-from ai import update_profile
+from ai import update_profile, chat_with_memory
 
 def handle(uid, text):
     data = load(uid)
+
+    # ensure history exists (for old users)
+    data.setdefault("history", [])
 
     # ===== FIRST TIME USER =====
     if not data.get("started"):
@@ -16,10 +19,10 @@ def handle(uid, text):
             "Do you need help finding a job? (yes/no)"
         )
 
-    text = text.lower()
+    text_lower = text.lower()
 
     # ===== USER AGREES =====
-    if text in ["yes", "y"]:
+    if text_lower in ["yes", "y"]:
         return (
             "Great! 🎯\n\n"
             "To help you find the best jobs, I need your *profile*.\n\n"
@@ -33,11 +36,11 @@ def handle(uid, text):
         )
 
     # ===== USER DECLINES =====
-    if text in ["no", "n"]:
+    if text_lower in ["no", "n"]:
         return "👍 No problem. Let me know anytime you need help!"
 
     # ===== PROFILE BUILDING =====
-    if any(word in text for word in ["experience", "developer", "engineer", "designer", "manager"]):
+    if any(word in text_lower for word in ["experience", "developer", "engineer", "designer", "manager"]):
         data["profile"] = update_profile(text, data["profile"])
         save(uid, data)
 
@@ -48,23 +51,27 @@ def handle(uid, text):
         )
 
     # ===== COMMANDS =====
-    if text == "saved":
+    if text_lower == "saved":
         return "\n".join([j["title"] for j in data["saved"]]) or "No saved jobs"
 
-    if text == "auto_apply on":
+    if text_lower == "auto_apply on":
         data["profile"]["auto_apply"] = True
         save(uid, data)
         return "🤖 Auto apply enabled"
 
-    if text == "auto_apply off":
+    if text_lower == "auto_apply off":
         data["profile"]["auto_apply"] = False
         save(uid, data)
         return "❌ Auto apply disabled"
 
-    # ===== DEFAULT =====
-    return (
-        "🤖 I didn’t understand that.\n\n"
-        "You can say:\n"
-        "- yes (to start job search)\n"
-        "- saved (to see saved jobs)"
+    # ===== AI CHAT MODE (DEFAULT) =====
+    reply, history = chat_with_memory(
+        data.get("history", []),
+        text,
+        data.get("profile", {})
     )
+
+    data["history"] = history
+    save(uid, data)
+
+    return reply
