@@ -16,28 +16,28 @@ def handle(uid, text):
             "Do you need help finding a job? (yes/no)"
         )
 
-    # ===== USER RESPONSE FLOW =====
     text = text.lower()
 
-    
+    # ===== USER AGREES =====
     if text in ["yes", "y"]:
-    return (
-        "Great! 🎯\n\n"
-        "To help you find the best jobs, I need your *profile*.\n\n"
-        "👉 Your profile means:\n"
-        "- Your skills (e.g. Python, sales, design)\n"
-        "- Your experience (e.g. 2 years, beginner)\n"
-        "- Your education (optional)\n\n"
-        "📌 Example:\n"
-        "'I am a Python developer with 2 years experience and a degree in computer science'\n\n"
-        "Now tell me about yourself 👇"
-    )
+        return (
+            "Great! 🎯\n\n"
+            "To help you find the best jobs, I need your *profile*.\n\n"
+            "👉 Your profile means:\n"
+            "- Your skills (e.g. Python, sales, design)\n"
+            "- Your experience (e.g. 2 years, beginner)\n"
+            "- Your education (optional)\n\n"
+            "📌 Example:\n"
+            "'I am a Python developer with 2 years experience and a degree in computer science'\n\n"
+            "Now tell me about yourself 👇"
+        )
 
+    # ===== USER DECLINES =====
     if text in ["no", "n"]:
         return "👍 No problem. Let me know anytime you need help!"
 
     # ===== PROFILE BUILDING =====
-    if "experience" in text or "developer" in text or "engineer" in text:
+    if any(word in text for word in ["experience", "developer", "engineer", "designer", "manager"]):
         data["profile"] = update_profile(text, data["profile"])
         save(uid, data)
 
@@ -61,7 +61,7 @@ def handle(uid, text):
         save(uid, data)
         return "❌ Auto apply disabled"
 
-    # ===== DEFAULT RESPONSE =====
+    # ===== DEFAULT =====
     return (
         "🤖 I didn’t understand that.\n\n"
         "You can say:\n"
