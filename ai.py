@@ -4,7 +4,6 @@ from openai import OpenAI
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-
 # ===== PROFILE UPDATE =====
 def update_profile(text, profile):
     prompt = f"Extract name, email, skills, experience, education from: {text} Return JSON"
