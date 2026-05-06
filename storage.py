@@ -13,6 +13,7 @@ def load(uid):
             "saved": [],
             "applied": [],
             "sent_ids": [],
+            "history": [],   # ✅ ADDED (AI memory)
             "last_reset": str(datetime.date.today()),
             "daily_count": 0,
             "notified_limit": False
