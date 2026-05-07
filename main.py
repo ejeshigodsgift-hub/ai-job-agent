@@ -167,3 +167,14 @@ def signup_route():
     )
 
     return jsonify(result)
+
+@app.route("/auth/login", methods=["POST"])
+def login_route():
+    data = request.json
+
+    result = login(
+        data.get("email"),
+        data.get("password")
+    )
+
+    return jsonify(result)
