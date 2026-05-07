@@ -1,5 +1,7 @@
 from sqlalchemy import Column, Integer, String, Text, JSON
 from database.db import Base
+from sqlalchemy import Column, String, Integer, JSON, Text
+
 
 
 # =====================
@@ -53,9 +55,6 @@ class Task(Base):
     type = Column(String)
     status = Column(String)
     payload = Column(JSON)
-
-from sqlalchemy import Column, String, Integer, JSON, Text
-from database.db import Base
 
 
 # =========================
