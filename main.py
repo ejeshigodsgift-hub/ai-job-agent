@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from services.job_service import get_jobs_for_user
+from subscription_system.access_control import check_limit
 from subscription_system.billing_service import start_subscription
 from queue.task_queue import add_task
 from services.generation_service import generate_documents
@@ -111,3 +112,15 @@ def subscribe():
     result = start_subscription(user_id, plan)
 
     return jsonify(result)
+
+
+@app.route("/jobs/request/<user_id>", methods=["POST"])
+def request_jobs(user_id):
+    limit = check_limit(user_id, "jobs_per_day")
+
+    if limit == 0:
+        return jsonify({"error": "Upgrade plan required"})
+
+    task_id = add_task("job_search", user_id, {})
+
+    return jsonify({"task_id": task_id})
