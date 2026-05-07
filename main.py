@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from services.job_service import get_jobs_for_user
+from subscription_system.billing_service import start_subscription
 from queue.task_queue import add_task
 from services.generation_service import generate_documents
 from services.profile_service import update_profile, get_profile
@@ -98,3 +99,15 @@ def request_generate(user_id):
         "message": "Document generation started",
         "task_id": task_id
     })
+
+
+@app.route("/subscribe", methods=["POST"])
+def subscribe():
+    data = request.json
+
+    user_id = data.get("user_id")
+    plan = data.get("plan")
+
+    result = start_subscription(user_id, plan)
+
+    return jsonify(result)
