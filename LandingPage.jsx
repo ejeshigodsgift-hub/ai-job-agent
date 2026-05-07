@@ -15,3 +15,11 @@ export default function LandingPage() {
     </div>
   );
 }
+
+
+variant = get_variant(user_id)
+
+if variant == "A":
+    headline = "Find Jobs Faster with AI"
+else:
+    headline = "Your AI Career Agent Works for You"
