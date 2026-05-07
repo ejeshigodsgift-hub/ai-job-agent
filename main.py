@@ -333,4 +333,9 @@ def toggle_autopilot(user_id):
     })
 
 
+@app.route("/health")
+def health():
+    return health_check()
+
+
 
