@@ -4,6 +4,8 @@ from autopilot.job_match_engine import rank_jobs
 from ai_engine.cv_generator import create_cv
 from ai_engine.cover_letter_generator import create_cover_letter
 from ai_engine.email_generator import create_email
+from main import send_autopilot_update
+
 
 
 def run_autopilot(user_id):
@@ -38,3 +40,19 @@ def run_autopilot(user_id):
         })
 
     return results
+
+
+
+def run_autopilot(user_id):
+    send_autopilot_update(user_id, {"status": "started"})
+
+    # simulate steps
+    send_autopilot_update(user_id, {"status": "searching_jobs"})
+
+    send_autopilot_update(user_id, {"status": "ranking_jobs"})
+
+    send_autopilot_update(user_id, {"status": "generating_cv"})
+
+    send_autopilot_update(user_id, {"status": "completed"})
+
+    return []
