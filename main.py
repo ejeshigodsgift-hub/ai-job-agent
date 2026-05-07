@@ -228,5 +228,17 @@ def trigger_autopilot(user_id):
         "results_count": len(results)
     })
 
+@app.route("/autopilot/results/<user_id>")
+def autopilot_results(user_id):
+    # In production: fetch from DB
+    return jsonify([])
+
+@app.route("/activity/<user_id>")
+def activity_log(user_id):
+    return jsonify([
+        {"action": "Job search completed", "time": "10:00"},
+        {"action": "CV generated", "time": "10:05"}
+    ])
+
 
 
