@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from services.job_service import get_jobs_for_user
+from auth.middleware import get_user_from_request
 from auth.auth_service import signup, login
 from subscription_system.access_control import check_limit
 from subscription_system.billing_service import start_subscription
@@ -178,3 +179,15 @@ def login_route():
     )
 
     return jsonify(result)
+
+
+@app.route("/jobs/request", methods=["POST"])
+def request_jobs():
+    user_id = get_user_from_request(request)
+
+    if not user_id:
+        return jsonify({"error": "Unauthorized"}), 401
+
+    task_id = add_task("job_search", user_id, {})
+
+    return jsonify({"task_id": task_id})
