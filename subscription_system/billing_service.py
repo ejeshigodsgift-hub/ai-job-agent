@@ -8,3 +8,8 @@ def start_subscription(user_id, plan):
     url = create_checkout_session(user_id, plan)
 
     return {"checkout_url": url}
+
+metadata={
+    "user_id": user_id,
+    "plan": plan
+}
