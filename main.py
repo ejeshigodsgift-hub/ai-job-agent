@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from services.job_service import get_jobs_for_user
 from services.profile_service import update_profile, get_profile
 from services.chat_service import chat_handler
 
@@ -56,3 +57,9 @@ def profile(user_id):
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
+
+
+@app.route("/jobs/search/<user_id>", methods=["GET"])
+def job_search(user_id):
+    jobs = get_jobs_for_user(user_id)
+    return jsonify({"jobs": jobs})
