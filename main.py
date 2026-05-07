@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from services.job_service import get_jobs_for_user
+from auth.auth_service import signup, login
 from subscription_system.access_control import check_limit
 from subscription_system.billing_service import start_subscription
 from queue.task_queue import add_task
@@ -154,3 +155,15 @@ def request_generate(user_id):
     })
 
     return jsonify({"task_id": task_id})
+
+
+@app.route("/auth/signup", methods=["POST"])
+def signup_route():
+    data = request.json
+
+    result = signup(
+        data.get("email"),
+        data.get("password")
+    )
+
+    return jsonify(result)
