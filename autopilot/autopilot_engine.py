@@ -5,6 +5,8 @@ from ai_engine.cv_generator import create_cv
 from ai_engine.cover_letter_generator import create_cover_letter
 from ai_engine.email_generator import create_email
 from main import send_autopilot_update
+from memory.learning_engine import update_preferences
+from memory.application_tracker import save_application
 
 
 
@@ -56,3 +58,22 @@ def run_autopilot(user_id):
     send_autopilot_update(user_id, {"status": "completed"})
 
     return []
+
+
+def run_autopilot(user_id):
+    profile = get_profile(user_id)
+    jobs = get_jobs_for_user(user_id)
+
+    for job in jobs[:5]:
+
+        # =========================
+        # LEARN USER PREFERENCES
+        # =========================
+        update_preferences(user_id, job)
+
+        # =========================
+        # TRACK APPLICATION
+        # =========================
+        save_application(user_id, job, "applied")
+
+    return jobs
