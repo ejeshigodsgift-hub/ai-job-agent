@@ -1,55 +1,58 @@
-import os, time, threading
-from flask import Flask
-import telegram
+from flask import Flask, request, jsonify
+from services.profile_service import update_profile, get_profile
+from services.chat_service import chat_handler
 
-from bot import handle
-from jobs import background_search
-from storage import load
-
-TOKEN = os.getenv("TELEGRAM_TOKEN")
-
-if not TOKEN:
-    raise ValueError("Missing TELEGRAM_TOKEN")
-
-bot = telegram.Bot(token=TOKEN)
 app = Flask(__name__)
 
-# ===== TELEGRAM LOOP (SYNC SAFE) =====
-def run_bot():
-    offset = None
-
-    while True:
-        try:
-            updates = bot.get_updates(offset=offset, timeout=10)
-
-            for u in updates:
-                offset = u.update_id + 1
-
-                if u.message:
-                    uid = u.message.chat.id
-                    text = u.message.text or ""
-
-                    reply = handle(uid, text)
-                    bot.send_message(chat_id=uid, text=reply)
-
-        except Exception as e:
-            print("Bot error:", e)
-
-        time.sleep(2)
-
-# ===== BACKGROUND THREADS =====
-def start_threads():
-    threading.Thread(target=run_bot, daemon=True).start()
-    threading.Thread(target=background_search, args=(bot,), daemon=True).start()
-
-# ===== WEB =====
+# =========================
+# HEALTH CHECK
+# =========================
 @app.route("/")
 def home():
-    return "AI Job Agent Running"
+    return {"status": "AI Job Agent running"}
 
-# ===== RUN =====
+# =========================
+# CHAT ENDPOINT
+# =========================
+@app.route("/chat", methods=["POST"])
+def chat():
+    data = request.json
+    user_id = data.get("user_id")
+    message = data.get("message")
+
+    reply = chat_handler(user_id, message)
+    return jsonify({"reply": reply})
+
+# =========================
+# PROFILE UPDATE (NAME, EMAIL, PHONE INCLUDED)
+# =========================
+@app.route("/profile/update", methods=["POST"])
+def profile_update():
+    data = request.json
+
+    user_id = data.get("user_id")
+
+    profile_data = {
+        "name": data.get("name"),
+        "email": data.get("email"),
+        "phone": data.get("phone"),
+        "skills": data.get("skills", []),
+        "experience": data.get("experience", ""),
+        "location": data.get("location", ""),
+        "job_type": data.get("job_type", "")
+    }
+
+    update_profile(user_id, profile_data)
+
+    return jsonify({"status": "profile updated"})
+
+# =========================
+# GET PROFILE
+# =========================
+@app.route("/profile/<user_id>", methods=["GET"])
+def profile(user_id):
+    return jsonify(get_profile(user_id))
+
+
 if __name__ == "__main__":
-    start_threads()
-
-    port = int(os.getenv("PORT", 3000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=5000)
