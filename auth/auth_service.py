@@ -1,6 +1,9 @@
 import json
 import os
 from auth.password_utils import hash_password, verify_password
+from database.db import SessionLocal
+from database.models import User
+from auth.password_utils import hash_password
 from auth.jwt_handler import generate_token
 
 DB_FILE = "users_db.json"
@@ -52,3 +55,25 @@ def login(email, password):
     token = generate_token(email)
 
     return {"token": token}
+
+
+def signup(email, password):
+    db = SessionLocal()
+
+    existing = db.query(User).filter(User.email == email).first()
+
+    if existing:
+        return {"error": "User exists"}
+
+    user = User(
+        id=email,
+        email=email,
+        password=hash_password(password),
+        plan="free"
+    )
+
+    db.add(user)
+    db.commit()
+    db.close()
+
+    return {"status": "created"}
