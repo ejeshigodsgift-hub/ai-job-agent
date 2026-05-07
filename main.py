@@ -11,9 +11,15 @@ from services.generation_service import generate_documents
 from services.profile_service import update_profile, get_profile
 from services.chat_service import chat_handler
 from admin.admin_routes import admin_bp
+from flask import Flask
+from flask_socketio import SocketIO, emit
 
 
 app = Flask(__name__)
+socketio = SocketIO(app, cors_allowed_origins="*")
+
+
+#app = Flask(__name__)
 
 app.register_blueprint(admin_bp)
 
@@ -239,6 +245,47 @@ def activity_log(user_id):
         {"action": "Job search completed", "time": "10:00"},
         {"action": "CV generated", "time": "10:05"}
     ])
+
+
+# =========================
+# USER CONNECT
+# =========================
+@socketio.on("connect")
+def handle_connect():
+    print("User connected")
+
+
+# =========================
+# JOIN USER ROOM
+# =========================
+@socketio.on("join")
+def join_room(data):
+    user_id = data["user_id"]
+    emit("message", {"status": "joined", "user": user_id})
+
+
+# =========================
+# SEND LIVE JOB UPDATE
+# =========================
+def send_job_update(user_id, job_data):
+    socketio.emit("job_update", {
+        "user_id": user_id,
+        "job": job_data
+    })
+
+
+# =========================
+# SEND AUTOPILOT UPDATE
+# =========================
+def send_autopilot_update(user_id, data):
+    socketio.emit("autopilot_update", {
+        "user_id": user_id,
+        "data": data
+    })
+
+
+if __name__ == "__main__":
+    socketio.run(app, host="0.0.0.0", port=5000)
 
 
 
