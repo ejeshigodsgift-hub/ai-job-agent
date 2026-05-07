@@ -53,3 +53,32 @@ class Task(Base):
     type = Column(String)
     status = Column(String)
     payload = Column(JSON)
+
+from sqlalchemy import Column, String, Integer, JSON, Text
+from database.db import Base
+
+
+# =========================
+# USER MEMORY TABLE
+# =========================
+class Memory(Base):
+    __tablename__ = "memory"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(String)
+    key = Column(String)          # e.g. "preferred_roles"
+    value = Column(JSON)          # stored memory data
+
+
+# =========================
+# APPLICATION HISTORY
+# =========================
+class Application(Base):
+    __tablename__ = "applications"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(String)
+    job_title = Column(String)
+    company = Column(String)
+    status = Column(String)  # applied, rejected, hired
+    data = Column(JSON)
