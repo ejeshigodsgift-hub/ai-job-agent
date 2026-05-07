@@ -13,3 +13,8 @@ metadata={
     "user_id": user_id,
     "plan": plan
 }
+
+
+{
+  "plan": "pro"
+}
