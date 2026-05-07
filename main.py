@@ -124,3 +124,33 @@ def request_jobs(user_id):
     task_id = add_task("job_search", user_id, {})
 
     return jsonify({"task_id": task_id})
+
+@app.route("/generate/request/<user_id>", methods=["POST"])
+def request_generate(user_id):
+    limit = check_limit(user_id, "cv_generations")
+
+    if limit == 0:
+        return jsonify({"error": "Upgrade plan required"})
+
+    job_index = request.json.get("job_index", 0)
+
+    task_id = add_task("generate_docs", user_id, {
+        "job_index": job_index
+    })
+
+    return jsonify({"task_id": task_id})
+
+@app.route("/generate/request/<user_id>", methods=["POST"])
+def request_generate(user_id):
+    limit = check_limit(user_id, "cv_generations")
+
+    if limit == 0:
+        return jsonify({"error": "Upgrade plan required"})
+
+    job_index = request.json.get("job_index", 0)
+
+    task_id = add_task("generate_docs", user_id, {
+        "job_index": job_index
+    })
+
+    return jsonify({"task_id": task_id})
