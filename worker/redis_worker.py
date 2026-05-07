@@ -3,7 +3,7 @@ import time
 from queue.redis_client import r
 from worker.job_worker import process_job_search
 from worker.cv_worker import process_cv_generation
-
+from queue.lock import acquire_lock, release_lock
 
 def run_worker(worker_name="worker-1"):
     print(f"{worker_name} started...")
@@ -34,3 +34,15 @@ def run_worker(worker_name="worker-1"):
 
 if __name__ == "__main__":
     run_worker()
+
+
+def safe_process(task, handler):
+    task_id = task["id"]
+
+    if not acquire_lock(task_id):
+        return  # already processing somewhere else
+
+    try:
+        handler(task)
+    finally:
+        release_lock(task_id)
