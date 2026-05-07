@@ -9,3 +9,11 @@ def check_limit(user_id, feature):
     limits = PLANS.get(plan, PLANS["free"])
 
     return limits.get(feature, 0)
+
+def check_access(user, feature):
+    plan = user.get("plan")
+
+    if plan == "free" and feature == "autopilot":
+        return False
+
+    return True
