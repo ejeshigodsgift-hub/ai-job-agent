@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from services.job_service import get_jobs_for_user
+from services.generation_service import generate_documents
 from services.profile_service import update_profile, get_profile
 from services.chat_service import chat_handler
 
@@ -63,3 +64,12 @@ if __name__ == "__main__":
 def job_search(user_id):
     jobs = get_jobs_for_user(user_id)
     return jsonify({"jobs": jobs})
+
+
+@app.route("/generate/<user_id>", methods=["GET"])
+def generate(user_id):
+    job_index = int(request.args.get("job", 0))
+
+    result = generate_documents(user_id, job_index)
+
+    return jsonify(result)
