@@ -13,7 +13,7 @@ from services.chat_service import chat_handler
 from admin.admin_routes import admin_bp
 from flask import Flask
 from flask_socketio import SocketIO, emit
-
+from queue.redis_queue import add_task
 
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
@@ -286,6 +286,15 @@ def send_autopilot_update(user_id, data):
 
 if __name__ == "__main__":
     socketio.run(app, host="0.0.0.0", port=5000)
+
+@app.route("/jobs/request/<user_id>", methods=["POST"])
+def request_jobs(user_id):
+    task_id = add_task("job_search", user_id, {})
+
+    return jsonify({
+        "task_id": task_id,
+        "status": "queued"
+    })
 
 
 
