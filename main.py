@@ -318,5 +318,19 @@ def upgrade_banner(user_id):
         "message": "Upgrade to Pro for 10x better job matches"
     })
 
+@app.route("/autopilot/toggle/<user_id>", methods=["POST"])
+def toggle_autopilot(user_id):
+    data = request.json
+
+    profile = get_profile(user_id)
+    profile["autopilot"] = data.get("enabled", False)
+
+    update_profile(user_id, profile)
+
+    return jsonify({
+        "status": "updated",
+        "autopilot": profile["autopilot"]
+    })
+
 
 
