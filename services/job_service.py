@@ -3,6 +3,11 @@ from services.ranking_service import rank_jobs
 from services.profile_service import get_profile
 import json
 import os
+from database.db import SessionLocal
+from database.models import Job
+from integrations.adzuna_client import search_jobs
+from services.ranking_service import rank_jobs
+from services.profile_service import get_profile
 
 CACHE_FILE = "jobs_cache.json"
 
@@ -36,5 +41,36 @@ def get_jobs_for_user(user_id):
     cache = load_cache()
     cache[user_id] = ranked
     save_cache(cache)
+
+    return ranked
+
+
+
+def get_jobs_for_user(user_id):
+    db = SessionLocal()
+
+    profile = get_profile(user_id)
+
+    jobs = search_jobs(
+        " ".join(profile.get("skills", [])),
+        profile.get("job_type", "remote")
+    )
+
+    ranked = rank_jobs(jobs, profile)
+
+    # Save to DB
+    for job in ranked:
+        db_job = Job(
+            user_id=user_id,
+            title=job["title"],
+            company=job["company"],
+            location=job["location"],
+            url=job["url"]
+        )
+        db.add(db_job)
+
+    db.commit()
+
+    db.close()
 
     return ranked
