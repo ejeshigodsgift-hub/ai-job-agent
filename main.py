@@ -191,3 +191,13 @@ def request_jobs():
     task_id = add_task("job_search", user_id, {})
 
     return jsonify({"task_id": task_id})
+
+
+@app.route("/profile", methods=["GET"])
+def profile():
+    user_id = get_user_from_request(request)
+
+    if not user_id:
+        return jsonify({"error": "Unauthorized"}), 401
+
+    return jsonify(get_profile(user_id))
