@@ -8,6 +8,7 @@ from database.models import Job
 from integrations.adzuna_client import search_jobs
 from services.ranking_service import rank_jobs
 from services.profile_service import get_profile
+from monitoring.logger import log_event
 
 CACHE_FILE = "jobs_cache.json"
 
@@ -74,3 +75,5 @@ def get_jobs_for_user(user_id):
     db.close()
 
     return ranked
+
+log_event("JOB_SEARCH_STARTED", {"user_id": user_id})
