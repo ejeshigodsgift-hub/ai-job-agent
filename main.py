@@ -298,3 +298,25 @@ def request_jobs(user_id):
 
 
 
+@app.route("/onboarding/<user_id>", methods=["POST"])
+def onboarding(user_id):
+    data = request.json
+
+    update_profile(user_id, {
+        "job_type": data.get("job_type"),
+        "skills": data.get("skills"),
+        "experience": data.get("experience")
+    })
+
+    return jsonify({"status": "saved"})
+
+
+@app.route("/upgrade/banner/<user_id>")
+def upgrade_banner(user_id):
+    return jsonify({
+        "show": True,
+        "message": "Upgrade to Pro for 10x better job matches"
+    })
+
+
+
