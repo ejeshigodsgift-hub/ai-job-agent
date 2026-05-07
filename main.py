@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from services.job_service import get_jobs_for_user
+from billing.stripe_webhook import handle_webhook
 from auth.middleware import get_user_from_request
 from auth.auth_service import signup, login
 from subscription_system.access_control import check_limit
@@ -201,3 +202,13 @@ def profile():
         return jsonify({"error": "Unauthorized"}), 401
 
     return jsonify(get_profile(user_id))
+
+
+@app.route("/stripe/webhook", methods=["POST"])
+def stripe_webhook():
+    payload = request.data
+    sig_header = request.headers.get("Stripe-Signature")
+
+    result, status = handle_webhook(payload, sig_header)
+
+    return jsonify(result), status
