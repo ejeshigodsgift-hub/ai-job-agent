@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from services.job_service import get_jobs_for_user
+from queue.task_queue import add_task
 from services.generation_service import generate_documents
 from services.profile_service import update_profile, get_profile
 from services.chat_service import chat_handler
@@ -73,3 +74,13 @@ def generate(user_id):
     result = generate_documents(user_id, job_index)
 
     return jsonify(result)
+
+
+@app.route("/jobs/request/<user_id>", methods=["POST"])
+def request_jobs(user_id):
+    task_id = add_task("job_search", user_id, {})
+
+    return jsonify({
+        "message": "Job search started",
+        "task_id": task_id
+    })
