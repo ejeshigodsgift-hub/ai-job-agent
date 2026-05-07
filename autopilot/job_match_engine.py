@@ -1,5 +1,6 @@
 
 from memory.memory_service import get_memory
+from learning.learning_engine import get_user_job_weights
 
 
 def score_job(user_profile, job):
@@ -52,5 +53,31 @@ def score_job(user_profile, job, user_id):
     for role, weight in prefs.items():
         if role in text:
             score += weight  # learned preference boost
+
+    return score
+
+
+
+
+def score_job(user_profile, job, user_id):
+    score = 0
+
+    text = job["title"].lower()
+
+    # =========================
+    # SKILL MATCHING
+    # =========================
+    for skill in user_profile.get("skills", []):
+        if skill.lower() in text:
+            score += 5
+
+    # =========================
+    # LEARNING BOOST (NEW)
+    # =========================
+    weights = get_user_job_weights(user_id)
+
+    for past_job, weight in weights.items():
+        if past_job in text:
+            score += weight
 
     return score
