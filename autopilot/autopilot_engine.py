@@ -8,6 +8,7 @@ from main import send_autopilot_update
 from memory.learning_engine import update_preferences
 from memory.application_tracker import save_application
 from autonomous.auto_apply_engine import auto_apply
+from learning.outcome_tracker import record_outcome
 
 
 def run_autopilot(user_id):
@@ -88,5 +89,23 @@ def run_autopilot(user_id):
 
     # STEP 2: AUTO APPLY IF ENABLED
     results = auto_apply(user_id, top_jobs)
+
+    return results
+
+
+def run_autopilot(user_id):
+    jobs = get_jobs_for_user(user_id)
+
+    results = []
+
+    for job in jobs:
+
+        score = score_job(get_profile(user_id), job, user_id)
+
+        if score > 8:
+
+            record_outcome(user_id, job, "applied")
+
+            results.append(job)
 
     return results
