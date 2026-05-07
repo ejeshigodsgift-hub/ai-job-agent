@@ -21,3 +21,12 @@ def get_platform_stats():
         "pro_users": pro_users,
         "premium_users": premium_users
     }
+
+
+{
+  "total_users": 120,
+  "total_jobs": 540,
+  "total_tasks": 300,
+  "pro_users": 40,
+  "premium_users": 10
+}
