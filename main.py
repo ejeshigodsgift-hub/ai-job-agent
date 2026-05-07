@@ -84,3 +84,17 @@ def request_jobs(user_id):
         "message": "Job search started",
         "task_id": task_id
     })
+
+@app.route("/generate/request/<user_id>", methods=["POST"])
+def request_generate(user_id):
+    data = request.json
+    job_index = data.get("job_index", 0)
+
+    task_id = add_task("generate_docs", user_id, {
+        "job_index": job_index
+    })
+
+    return jsonify({
+        "message": "Document generation started",
+        "task_id": task_id
+    })
