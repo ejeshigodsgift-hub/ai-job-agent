@@ -34,3 +34,13 @@ def update_profile(user_id, profile_data):
 def get_profile(user_id):
     db = load_db()
     return db.get(user_id, {}).get("profile", {})
+
+
+
+{
+  "name": "John",
+  "email": "john@email.com",
+  "phone": "08012345678",
+  "plan": "free",
+  "skills": ["Python"]
+}
