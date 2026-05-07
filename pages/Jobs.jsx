@@ -23,3 +23,30 @@ export default function Jobs() {
     </div>
   );
 }
+
+
+import { useEffect, useState } from "react";
+import { socket } from "../api/socket";
+
+export default function Jobs() {
+  const [jobs, setJobs] = useState([]);
+
+  useEffect(() => {
+    socket.on("job_update", (data) => {
+      setJobs((prev) => [...prev, data.job]);
+    });
+  }, []);
+
+  return (
+    <div>
+      <h1>Live Jobs</h1>
+
+      {jobs.map((job, i) => (
+        <div key={i}>
+          <h3>{job.title}</h3>
+          <p>{job.company}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
