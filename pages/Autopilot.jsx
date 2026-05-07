@@ -37,3 +37,35 @@ export default function Autopilot() {
     </div>
   );
 }
+
+
+import { useEffect, useState } from "react";
+import { socket } from "../api/socket";
+
+export default function Autopilot() {
+  const [updates, setUpdates] = useState([]);
+
+  useEffect(() => {
+    const userId = "123";
+
+    socket.emit("join", { user_id: userId });
+
+    socket.on("autopilot_update", (data) => {
+      setUpdates((prev) => [...prev, data.data]);
+    });
+
+    return () => socket.disconnect();
+  }, []);
+
+  return (
+    <div>
+      <h1>Live Autopilot Feed</h1>
+
+      {updates.map((u, i) => (
+        <div key={i}>
+          <p>{u.status}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
