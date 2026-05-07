@@ -92,3 +92,15 @@ class JobOutcome(Base):
 
     outcome = Column(String)  # applied, interview, rejected, hired
     score = Column(Integer)   # learning weight
+
+
+class JobOutcome(Base):
+    __tablename__ = "job_outcomes"
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(String)
+    job_title = Column(String)
+    company = Column(String)
+
+    outcome = Column(String)  # applied, interview, rejected, hired
+    score = Column(Integer)   # learning weight
