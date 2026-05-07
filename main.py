@@ -9,8 +9,12 @@ from queue.task_queue import add_task
 from services.generation_service import generate_documents
 from services.profile_service import update_profile, get_profile
 from services.chat_service import chat_handler
+from admin.admin_routes import admin_bp
+
 
 app = Flask(__name__)
+
+app.register_blueprint(admin_bp)
 
 # =========================
 # HEALTH CHECK
@@ -212,3 +216,6 @@ def stripe_webhook():
     result, status = handle_webhook(payload, sig_header)
 
     return jsonify(result), status
+
+
+
