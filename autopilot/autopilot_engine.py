@@ -7,7 +7,7 @@ from ai_engine.email_generator import create_email
 from main import send_autopilot_update
 from memory.learning_engine import update_preferences
 from memory.application_tracker import save_application
-
+from autonomous.auto_apply_engine import auto_apply
 
 
 def run_autopilot(user_id):
@@ -77,3 +77,16 @@ def run_autopilot(user_id):
         save_application(user_id, job, "applied")
 
     return jobs
+
+
+def run_autopilot(user_id):
+    profile = get_profile(user_id)
+    jobs = get_jobs_for_user(user_id)
+
+    # STEP 1: FILTER JOBS
+    top_jobs = jobs[:10]
+
+    # STEP 2: AUTO APPLY IF ENABLED
+    results = auto_apply(user_id, top_jobs)
+
+    return results
