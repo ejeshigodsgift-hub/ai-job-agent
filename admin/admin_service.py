@@ -49,3 +49,11 @@ def get_user_details(user_id):
 
         "jobs_count": len(jobs)
     }
+
+[
+  {
+    "id": "john@email.com",
+    "email": "john@email.com",
+    "plan": "pro"
+  }
+]
