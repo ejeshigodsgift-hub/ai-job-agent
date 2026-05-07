@@ -3,6 +3,7 @@ from services.job_service import get_jobs_for_user
 from billing.stripe_webhook import handle_webhook
 from auth.middleware import get_user_from_request
 from auth.auth_service import signup, login
+from autopilot.autopilot_engine import run_autopilot
 from subscription_system.access_control import check_limit
 from subscription_system.billing_service import start_subscription
 from queue.task_queue import add_task
@@ -216,6 +217,16 @@ def stripe_webhook():
     result, status = handle_webhook(payload, sig_header)
 
     return jsonify(result), status
+
+
+@app.route("/autopilot/run/<user_id>", methods=["POST"])
+def trigger_autopilot(user_id):
+    results = run_autopilot(user_id)
+
+    return jsonify({
+        "message": "Autopilot executed",
+        "results_count": len(results)
+    })
 
 
 
