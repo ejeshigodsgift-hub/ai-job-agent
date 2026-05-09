@@ -15,3 +15,5 @@ stripe
 paystackapi
 redis
 celery
+flask-mail
+docker
