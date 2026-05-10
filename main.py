@@ -7,6 +7,8 @@ from routes.billing_routes import billing_bp
 from routes.admin_routes import admin_bp
 from routes.chat_routes import chat_bp
 from services.socket_service import socketio
+from services.cors_service import enable_cors
+from services.rate_limit_service import limiter
 
 
 app = Flask(__name__)
@@ -35,3 +37,7 @@ socketio.init_app(app)
 
 if __name__ == "__main__":
     socketio.run(app, host="0.0.0.0", port=5000)
+
+enable_cors(app)
+
+limiter.init_app(app)
