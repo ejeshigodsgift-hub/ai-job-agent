@@ -1,5 +1,0 @@
-def log_error(error, context=None):
-    print({
-        "error": str(error),
-        "context": context
-    })
