@@ -6,6 +6,8 @@ from routes.jobs_routes import jobs_bp
 from routes.billing_routes import billing_bp
 from routes.admin_routes import admin_bp
 from routes.chat_routes import chat_bp
+from services.socket_service import socketio
+
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -27,3 +29,9 @@ if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
 
 app.register_blueprint(chat_bp)
+
+
+socketio.init_app(app)
+
+if __name__ == "__main__":
+    socketio.run(app, host="0.0.0.0", port=5000)
