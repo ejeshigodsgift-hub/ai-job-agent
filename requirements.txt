@@ -22,3 +22,8 @@ webdriver-manager
 flask-socketio
 eventlet
 schedule
+pytest
+flask-limiter
+flask-cors
+sentry-sdk
+prometheus-client
