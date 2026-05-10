@@ -17,3 +17,8 @@ redis
 celery
 flask-mail
 docker
+selenium
+webdriver-manager
+flask-socketio
+eventlet
+schedule
